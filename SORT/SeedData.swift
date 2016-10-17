@@ -17,7 +17,7 @@ struct SeedData {
             makeBenSORT(),
             makeWillSORT(),
             makeCatherineSORT(),
-//            makeDarlenesSORT()
+            makeSorrelleSORT()
         ]
     }
     
@@ -32,13 +32,15 @@ struct SeedData {
     // MARK: - Seed SORTs as static functions to make sorting easier.
     
     static func makeNolanSORT() -> SORT {
+        
         return SORT(
             title: "Nolan McQueen",
             subtitle: "FU all the time!",
             coordinate: CLLocationCoordinate2D(
                 latitude: 34.924799,
                 longitude: -82.438284
-            )
+            ),
+            image: "Nolan"
         )
     }
     
@@ -49,7 +51,8 @@ struct SeedData {
             coordinate: CLLocationCoordinate2D(
                 latitude: 34.924306,
                 longitude: -82.440022
-            )
+            ),
+            image: "Ben"
         )
     }
     
@@ -60,7 +63,8 @@ struct SeedData {
             coordinate: CLLocationCoordinate2D(
                 latitude: 34.925467,
                 longitude: -82.439293
-            )
+            ),
+            image: "Will"
         )
     }
     
@@ -71,18 +75,20 @@ struct SeedData {
             coordinate: CLLocationCoordinate2D(
                 latitude: 34.924748,
                 longitude:  -82.438265
-            )
+            ),
+            image: "Catherine"
         )
     }
     
-    static func makeDarlenesSORT() -> SORT {
+    static func makeSorrelleSORT() -> SORT {
         return SORT(
-            title: "Darlene's Dumplings",
-            subtitle: "Down right delicious Dumplings!",
+            title: "Sorrelle Datel",
+            subtitle: "ADPi Furman 2018",
             coordinate: CLLocationCoordinate2D(
-                latitude: 49.8716259581715,
-                longitude: -97.0682061864028
-            )
+                latitude: 34.924309,
+                longitude:  -82.440049
+            ),
+            image: "Sorrelle"
         )
     }
     
@@ -101,7 +107,8 @@ struct SeedData {
             coordinate: CLLocationCoordinate2D(
                 latitude: Double.random(min: 49, max: 49.9),
                 longitude: Double.random(min: -97, max: -98)
-            )
+            ),
+            image: "Car Icon"
         )
     }
 }

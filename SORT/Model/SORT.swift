@@ -14,15 +14,18 @@ class SORT: NSObject, MKAnnotation {
     var title: String?
     var subtitle: String?
     var coordinate: CLLocationCoordinate2D
+    var image: String?
     
     init(
         title: String?,
         subtitle: String?,
-        coordinate: CLLocationCoordinate2D)
+        coordinate: CLLocationCoordinate2D,
+        image: String?)
     {
         self.title = title
         self.subtitle = subtitle
         self.coordinate = coordinate
+        self.image = image
     }
     
     // MARK: - Computed Properties
@@ -38,6 +41,7 @@ class SORT: NSObject, MKAnnotation {
         
         return self.title == other.title &&
             self.subtitle == other.subtitle &&
+            self.image == self.image &&
             self.coordinate.latitude == other.coordinate.latitude &&
             self.coordinate.longitude == other.coordinate.longitude
     }

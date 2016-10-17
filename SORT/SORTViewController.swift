@@ -46,9 +46,13 @@ class SORTViewController: UIViewController,
         
         centerMapOnFurman()
         
+        
+        
         setupTableView()
         
         reloadSORTsFromDataSource()
+        
+
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -56,6 +60,7 @@ class SORTViewController: UIViewController,
         
         setupMapView()
         displaySORTAnnotationsOnMap()
+
     }
     
     // MARK: - Helpers
@@ -92,6 +97,12 @@ class SORTViewController: UIViewController,
         let visualEffect = UIBlurEffect(style: .light)
         let visualEffectView = UIVisualEffectView(effect: visualEffect)
         tableView.backgroundView = visualEffectView
+        tableView.layer.shadowColor = UIColor.darkGray.cgColor
+        tableView.layer.shadowOffset = CGSize(width: 2.0, height: 2.0)
+        tableView.layer.shadowOpacity = 1.0
+        tableView.layer.shadowRadius = 2
+        tableView.layer.cornerRadius = 30
+        tableView.layer.masksToBounds = true
     }
     
     func setupMapView() {
@@ -155,6 +166,16 @@ class SORTViewController: UIViewController,
     
     // MARK: - UITableViewDataSource
     
+
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        tableView.layer.shadowColor = UIColor.darkGray.cgColor
+        tableView.layer.shadowOffset = CGSize(width: 2.0, height: 2.0)
+        tableView.layer.shadowOpacity = 1.0
+        tableView.layer.shadowRadius = 2
+        tableView.layer.cornerRadius = 30
+        tableView.layer.masksToBounds = true
+    }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return SORTs.count
     }
@@ -163,11 +184,31 @@ class SORTViewController: UIViewController,
         let cell = tableView.dequeueReusableCell(withIdentifier: "sortCell", for: indexPath)
         
         let SORT = SORTs[(indexPath as NSIndexPath).row]
+        let newImage = resizeImage(image: UIImage(named: SORT.image!)!, toTheSize: CGSize(width:50,height: 50))
         
+        let cellImageLayer: CALayer?  = cell.imageView?.layer
+        cellImageLayer!.cornerRadius = 25
+        cellImageLayer!.masksToBounds = true
         cell.textLabel?.text = SORT.title
         cell.detailTextLabel?.text = SORT.subtitle
-        
+        cell.imageView?.image = newImage
         return cell
+    }
+    //Resizes the profile image
+    func resizeImage(image:UIImage, toTheSize size:CGSize)->UIImage{
+        
+        
+        let scale = size.width/image.size.width
+        let width:CGFloat  = image.size.width * scale
+        let height:CGFloat = image.size.height * scale;
+        
+        let rr:CGRect = CGRect( x:0, y:0, width: width,height: height);
+        
+        UIGraphicsBeginImageContextWithOptions(size, false, 0);
+        image.draw(in: rr)
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext();
+        return newImage!
     }
     
     // MARK: - UITableViewDelegate
@@ -178,12 +219,14 @@ class SORTViewController: UIViewController,
         mapView.selectAnnotation(SORT, animated: true)
     }
     
+    
+    
     // MARK: - MKMapViewDelegate
     
     func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
         // Get SORTs sorted by proximity to user location.
         guard let location = userLocation.location else { return }
-        
+        addRadiusCircle(location: mapView.userLocation.location!)
         // Sort by proximity to current location.
         SORTs = SORTs.ordered(byProximityTo: location)
         
@@ -223,6 +266,11 @@ class SORTViewController: UIViewController,
         annotationView.rightCalloutAccessoryView = rightButton
         
         return annotationView
+    }
+    
+    //Decreases radius on visible map
+    func mapViewDidFinishLoadingMap(_ mapView: MKMapView) {
+        //mapView.layer.cornerRadius = 250
     }
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
@@ -266,10 +314,24 @@ class SORTViewController: UIViewController,
         }
     }
     
+    func addRadiusCircle(location: CLLocation){
+        self.mapView.delegate = self
+        let circle = MKCircle(center: location.coordinate, radius: 100 as CLLocationDistance)
+        self.mapView.add(circle)
+    }
+    
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        if overlay is MKCircle {
+            let circle = MKCircleRenderer(overlay: overlay)
+            circle.strokeColor = UIColor.blue
+            circle.fillColor = UIColor(red: 0, green: 0, blue: 255, alpha: 0.1)
+            circle.lineWidth = 1
+            return circle
+        } else {
         let lineView = MKPolylineRenderer(overlay: overlay)
         lineView.strokeColor = .blue
         return lineView
+        }
     }
     
     // MARK: - DelegationVCDelegate
