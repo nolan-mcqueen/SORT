@@ -59,7 +59,7 @@ struct SeedData {
     static func makeWillSORT() -> SORT {
         return SORT(
             title: "Will Stevens",
-            subtitle: "Furman 2018 | KA",
+            subtitle: "Furman 2018 ",
             coordinate: CLLocationCoordinate2D(
                 latitude: 34.925467,
                 longitude: -82.439293

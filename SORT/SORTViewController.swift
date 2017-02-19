@@ -96,12 +96,14 @@ class SORTViewController: UIViewController,
         // Blur tableView background
         let visualEffect = UIBlurEffect(style: .light)
         let visualEffectView = UIVisualEffectView(effect: visualEffect)
+        
         tableView.backgroundView = visualEffectView
         tableView.layer.shadowColor = UIColor.darkGray.cgColor
         tableView.layer.shadowOffset = CGSize(width: 2.0, height: 2.0)
         tableView.layer.shadowOpacity = 1.0
         tableView.layer.shadowRadius = 2
         tableView.layer.cornerRadius = 30
+        
         tableView.layer.masksToBounds = true
     }
     
@@ -226,6 +228,7 @@ class SORTViewController: UIViewController,
     func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
         // Get SORTs sorted by proximity to user location.
         guard let location = userLocation.location else { return }
+    
         addRadiusCircle(location: mapView.userLocation.location!)
         // Sort by proximity to current location.
         SORTs = SORTs.ordered(byProximityTo: location)
@@ -240,6 +243,8 @@ class SORTViewController: UIViewController,
         updateUI()
     }
     
+    
+    
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         // Return nil (default) for all annotations which are not SORTs. i.e. MKUserLocation
         guard annotation is SORT else { return nil }
@@ -250,10 +255,10 @@ class SORTViewController: UIViewController,
             MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseIdentifier)
         
         annotationView.canShowCallout = true
-        
+        annotationView.image = UIImage(named: SORTs[1].image!)
         // Directions Button
         let leftButton = UIButton(type: .custom)
-        let image = UIImage(named: "Car Icon")
+        let image = UIImage(named: SORTs[1].image!)
         leftButton.setImage(image, for: UIControlState())
         leftButton.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
         leftButton.tintColor = UIColor.white
@@ -281,6 +286,8 @@ class SORTViewController: UIViewController,
         let indexPath = IndexPath(row: index, section: 0)
         tableView.selectRow(at: indexPath, animated: true, scrollPosition: .middle)
     }
+    
+    
     
     func mapView(
         _ mapView: MKMapView,
@@ -321,6 +328,7 @@ class SORTViewController: UIViewController,
     }
     
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+
         if overlay is MKCircle {
             let circle = MKCircleRenderer(overlay: overlay)
             circle.strokeColor = UIColor.blue
